@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎙️ لجنة الصوتيات — الألعاب</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#05050f; --card:#111128; --border:rgba(255,255,255,.07);
+  --accent:#e040fb; --accent2:#00e5ff; --gold:#ffd600;
+  --green:#00e676; --red:#ff1744; --text:#f0f0ff; --muted:#6b7280;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(224,64,251,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(224,64,251,.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 50%,rgba(224,64,251,.12) 0%,transparent 55%),radial-gradient(ellipse at 85% 20%,rgba(0,229,255,.09) 0%,transparent 50%);pointer-events:none;z-index:0}
+.wrap{max-width:820px;margin:0 auto;padding:16px;position:relative;z-index:1}
+
+/* HEADER */
+.site-header{text-align:center;padding:28px 0 20px;animation:slideDown .6s ease}
+.hbadge{display:inline-block;background:linear-gradient(135deg,rgba(224,64,251,.2),rgba(0,229,255,.15));border:1px solid rgba(224,64,251,.4);border-radius:100px;padding:5px 16px;font-size:.75rem;letter-spacing:2px;color:var(--accent);margin-bottom:10px;text-transform:uppercase}
+.site-header h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;background:linear-gradient(135deg,#e040fb,#00e5ff,#ffd600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.site-header p{color:var(--muted);font-size:.85rem}
+.results-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 18px;border-radius:50px;background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.3);color:var(--gold);text-decoration:none;font-weight:700;font-size:.82rem;transition:all .3s}
+.results-link:hover{background:rgba(255,214,0,.15);transform:translateY(-2px)}
+
+/* REG */
+#regScreen{background:var(--card);border:1px solid rgba(224,64,251,.25);border-radius:22px;padding:30px 24px;text-align:center;margin-bottom:20px;animation:fadeUp .5s ease .1s both}
+#regScreen h2{font-size:1.4rem;font-weight:900;margin-bottom:4px}
+#regScreen p{color:var(--muted);margin-bottom:22px;font-size:.85rem}
+.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin:0 auto 16px}
+@media(max-width:480px){.reg-grid{grid-template-columns:1fr}}
+.reg-field label{display:block;font-size:.72rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;text-align:right}
+.reg-field input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(224,64,251,.25);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:.95rem;outline:none;transition:all .3s}
+.reg-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(224,64,251,.1)}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:13px 36px;border-radius:13px;border:none;background:linear-gradient(135deg,#e040fb,#7c3aed);color:white;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(224,64,251,.4)}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(224,64,251,.5)}
+
+/* MAIN */
+#mainApp{display:none}
+#mainApp.on{display:block}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 16px;margin-bottom:18px;animation:fadeUp .4s ease}
+.t-avatar{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:white;flex-shrink:0}
+.t-info{flex:1;min-width:0}
+.t-name{font-weight:900;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-link{font-size:.7rem;color:var(--accent2)}
+.t-div{width:1px;height:32px;background:var(--border)}
+.t-sc{text-align:center}
+.t-sc-num{font-size:1.5rem;font-weight:900;color:var(--gold);line-height:1;transition:transform .3s}
+.t-sc-lbl{font-size:.65rem;color:var(--muted)}
+
+/* STAGE MAP */
+.stage-map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;animation:fadeUp .5s ease .1s both}
+@media(max-width:400px){.stage-map{grid-template-columns:1fr 1fr}}
+.stg-btn{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:12px 8px;cursor:pointer;text-align:center;transition:all .3s;font-family:'Tajawal',sans-serif;color:var(--muted);position:relative;overflow:hidden}
+.stg-btn .stg-icon{font-size:1.4rem;display:block;margin-bottom:3px}
+.stg-btn .stg-name{font-size:.78rem;font-weight:700}
+.stg-btn .stg-stars{font-size:.6rem;margin-top:2px;min-height:12px}
+.stg-btn:hover:not(.locked){border-color:var(--accent);color:var(--text);transform:translateY(-2px)}
+.stg-btn.active{border-color:var(--accent);background:rgba(224,64,251,.12);color:white;box-shadow:0 0 20px rgba(224,64,251,.25);transform:translateY(-3px)}
+.stg-btn.done{border-color:var(--green);background:rgba(0,230,118,.06);color:var(--green)}
+.stg-btn.locked{opacity:.4;cursor:not-allowed;filter:grayscale(.8)}
+.stg-btn.locked::after{content:'🔒';position:absolute;top:6px;left:6px;font-size:.75rem}
+
+/* GAME CARD */
+.game-card{background:var(--card);border:1px solid rgba(224,64,251,.2);border-radius:20px;padding:24px;box-shadow:0 0 40px rgba(224,64,251,.1);animation:fadeUp .4s ease;margin-bottom:20px}
+
+/* Progress */
+.q-progress{margin-bottom:18px}
+.q-prog-top{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.q-prog-bar{height:5px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+.q-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:5px;transition:width .5s ease}
+
+/* Game header */
+.gc-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.gc-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:linear-gradient(135deg,rgba(224,64,251,.2),rgba(0,229,255,.12));border:1px solid rgba(224,64,251,.25);flex-shrink:0}
+.gc-title{font-size:1.2rem;font-weight:900}
+.gc-desc{font-size:.78rem;color:var(--muted);margin-top:2px}
+
+/* Timer */
+.timer-wrap{display:flex;justify-content:center;margin-bottom:14px}
+.timer-ring{position:relative;width:68px;height:68px}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-ring circle{transition:stroke-dashoffset 1s linear}
+.timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:var(--gold)}
+
+/* Audio bars */
+.audio-bars{display:flex;gap:3px;align-items:flex-end;justify-content:center;height:36px;margin-bottom:12px}
+.ab{width:4px;border-radius:3px;background:linear-gradient(to top,var(--accent),var(--accent2));animation:abW .7s ease-in-out infinite}
+.ab:nth-child(1){animation-delay:0s}.ab:nth-child(2){animation-delay:.07s}.ab:nth-child(3){animation-delay:.14s}
+.ab:nth-child(4){animation-delay:.21s}.ab:nth-child(5){animation-delay:.28s}.ab:nth-child(6){animation-delay:.21s}
+.ab:nth-child(7){animation-delay:.14s}.ab:nth-child(8){animation-delay:.07s}.ab:nth-child(9){animation-delay:0s}
+@keyframes abW{0%,100%{height:6px}50%{height:32px}}
+.audio-bars.paused .ab{animation-play-state:paused;height:6px}
+
+/* Audio btn */
+.aud-btn{display:flex;align-items:center;gap:8px;background:rgba(0,229,255,.07);border:1.5px solid rgba(0,229,255,.25);border-radius:50px;padding:8px 18px;margin:0 auto 14px;width:fit-content;cursor:pointer;color:var(--accent2);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.88rem;transition:all .3s}
+.aud-btn:hover{background:rgba(0,229,255,.14);transform:scale(1.03)}
+
+/* Question box */
+.qbox{background:rgba(224,64,251,.05);border:1px solid rgba(224,64,251,.13);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.qbox-txt{font-size:1.15rem;font-weight:700;line-height:1.6}
+.qbox-hint{font-size:.78rem;color:var(--accent2);margin-top:6px}
+
+/* Options */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+@media(max-width:380px){.opts{grid-template-columns:1fr}}
+.opt{padding:14px 10px;border-radius:12px;border:1.5px solid rgba(224,64,251,.18);background:rgba(255,255,255,.02);color:var(--text);font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .22s;text-align:center}
+.opt:hover:not(:disabled){border-color:var(--accent);background:rgba(224,64,251,.09);transform:scale(1.02)}
+.opt.ok{border-color:var(--green)!important;background:rgba(0,230,118,.11)!important;color:var(--green)!important}
+.opt.bad{border-color:var(--red)!important;background:rgba(255,23,68,.07)!important;color:var(--red)!important}
+.opt:disabled{cursor:default}
+
+/* Text answer */
+.txt-ans{display:flex;gap:9px;margin-bottom:12px}
+.txt-inp{flex:1;background:rgba(255,255,255,.04);border:1.5px solid rgba(224,64,251,.22);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:.95rem;outline:none;transition:all .3s}
+.txt-inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(224,64,251,.1)}
+.send-btn{padding:12px 18px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--accent),#7c3aed);color:white;font-family:'Tajawal',sans-serif;font-weight:900;font-size:.9rem;cursor:pointer;transition:all .3s;white-space:nowrap}
+.send-btn:hover{transform:translateY(-2px);box-shadow:0 0 18px rgba(224,64,251,.35)}
+
+/* Feedback */
+.fb{text-align:center;padding:11px;border-radius:11px;font-size:1rem;font-weight:700;display:none;animation:popIn .35s cubic-bezier(.34,1.56,.64,1);margin-bottom:8px}
+.fb.on{display:block}
+.fb.ok{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.25)}
+.fb.bad{background:rgba(255,23,68,.07);color:var(--red);border:1px solid rgba(255,23,68,.2)}
+
+/* Next btn */
+.btn-next{width:100%;padding:13px;border-radius:13px;border:none;background:linear-gradient(135deg,#00e5ff,#0891b2);color:#000;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;transition:all .3s;display:none;margin-top:8px}
+.btn-next.on{display:block;animation:fadeUp .3s ease}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 0 20px rgba(0,229,255,.3)}
+
+/* Stage complete */
+.stg-done{text-align:center;padding:36px 16px}
+.stg-done .big-e{font-size:3.5rem;display:block;margin-bottom:10px;animation:bounce 1.2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.stg-done h2{font-size:1.6rem;font-weight:900;margin-bottom:6px}
+.stg-done .pts{font-size:2.6rem;font-weight:900;color:var(--gold)}
+.stg-done-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.btn-gold{padding:12px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000;font-family:'Tajawal',sans-serif;font-weight:900;font-size:.95rem;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,214,0,.4)}
+.btn-purple{padding:12px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#7c3aed);color:white;font-family:'Tajawal',sans-serif;font-weight:900;font-size:.95rem;cursor:pointer;transition:all .3s}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(224,64,251,.35)}
+
+/* CONFETTI */
+.conf{position:fixed;width:8px;height:8px;border-radius:2px;animation:cFall 1.5s ease forwards;pointer-events:none;z-index:999}
+@keyframes cFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+
+/* ANIMATIONS */
+@keyframes slideDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site-header">
+  <div class="hbadge">🎙️ لجنة الصوتيات</div>
+  <h1>ألعاب الصوتيات</h1>
+  <p>أنمي • كرتون • مراحل — الأسرع يفوز!</p>
+  <a class="results-link" href="results.html" target="_blank">🏆 لوحة المتصدرين</a>
+</header>
+
+<!-- REGISTRATION -->
+<div id="regScreen">
+  <h2>🎮 سجّل وابدأ</h2>
+  <p>أدخل اسمك ورابط حسابك في KarboAI ليظهر في لوحة المتصدرين</p>
+  <div class="reg-grid">
+    <div class="reg-field">
+      <label>اسمك</label>
+      <input id="rName" type="text" placeholder="مثال: أنيمي_فان" maxlength="25">
+    </div>
+    <div class="reg-field">
+      <label>رابط KarboAI</label>
+      <input id="rLink" type="text" placeholder="karboai.com/u/..." dir="ltr">
+    </div>
+  </div>
+  <button class="btn-start" onclick="register()">ابدأ اللعب 🚀</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+  <div class="topbar">
+    <div class="t-avatar" id="tAvatar">؟</div>
+    <div class="t-info">
+      <div class="t-name" id="tName">—</div>
+      <div class="t-link" id="tLink">karboai</div>
+    </div>
+    <div class="t-div"></div>
+    <div class="t-sc">
+      <div class="t-sc-num" id="tScore">0</div>
+      <div class="t-sc-lbl">نقطة</div>
+    </div>
+  </div>
+
+  <div class="stage-map" id="stageMap"></div>
+  <div class="game-card" id="gameCard"></div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ═══════════════════════════════
+//  GAME DATA — 3 STAGES × 5 Qs
+// ═══════════════════════════════
+// Audio uses Web Audio API tones — no external files needed!
+// Each question has a generated tone pattern for the "listen" effect.
+
+const STAGES = [
+  {
+    id:0, name:'المبتدئ', icon:'🌟', color:'#00e5ff',
+    desc:'خمّن الشخصية من الوصف',
+    type:'choice', timer:20,
+    qs:[
+      {q:'من هو بطل ناروتو الذي يريد أن يصبح هوكاغي؟', hint:'اسمه = اسم الأنمي', ans:'ناروتو', opts:['ساسكي','ناروتو','كاكاشي','ساكورا'], sound:'naruto'},
+      {q:'من هو قبطان الطاقم في One Piece الذي يمطّ جسمه؟', hint:'أكل فاكهة الشيطان', ans:'لوفي', opts:['زورو','لوفي','ناميه','أوسوب'], sound:'onepiece'},
+      {q:'من هو الشيطان المسلّح بسيف في Demon Slayer؟', hint:'شعره أسمر بأقراط', ans:'تانجيرو', opts:['زينيتسو','إينوسكي','تانجيرو','كيبوتسوجي'], sound:'ds'},
+      {q:'ما اسم بطل My Hero Academia ذو الشعر الأخضر؟', hint:'لقبه Deku', ans:'إيزوكو', opts:['باكوغو','تودوروكي','إيزوكو','أولمان'], sound:'mha'},
+      {q:'من هو القرد الذي يحارب الأشرار في Dragon Ball Z؟', hint:'Super Saiyan', ans:'غوكو', opts:['فيجيتا','غوكو','تيانشا','كريلين'], sound:'dbz'},
+    ]
+  },
+  {
+    id:1, name:'المتوسط', icon:'⚡', color:'#e040fb',
+    desc:'أكمل الجملة الشهيرة',
+    type:'text', timer:15,
+    qs:[
+      {q:'ناروتو يقول: "أنا سأصبح _____ القرية!"', hint:'أعلى منصب في القرية', ans:'هوكاغي', alts:['هوكاغه','hokage','الهوكاغي'], sound:'naruto'},
+      {q:'لوفي يقول: "أنا سأصبح ملك _____!"', hint:'مجموعة تبحث عن الكنز في البحر', ans:'القراصنة', alts:['pirates','قراصنه','القراصنه'], sound:'onepiece'},
+      {q:'غوكو يصرخ: "كاميه كاميه _____!"', hint:'آخر كلمة في الهجوم الأشهر', ans:'ها', alts:['ha','هاء','هه'], sound:'dbz'},
+      {q:'ديكو يفكر: "بكلمة واحدة... هو كان _____!"', hint:'كلمة الإعجاب الأكثر تكراراً', ans:'رائع', alts:['cool','amazing','رهيب','رائعاً'], sound:'mha'},
+      {q:'تانجيرو يقول أسلوبه القتالي: "تنفس بأسلوب _____"', hint:'عنصر من الطبيعة يشرق كل صباح', ans:'الشمس', alts:['sun','الشمس','شمس'], sound:'ds'},
+    ]
+  },
+  {
+    id:2, name:'الأسطورة', icon:'👑', color:'#ffd600',
+    desc:'خمّن الأنمي من النغمة بـ 10 ثواني!',
+    type:'choice', timer:10,
+    qs:[
+      {q:'🎵 من أي أنمي هذه النغمة؟', hint:'نينجا، قرية الأوراق، أكاتسوكي', ans:'ناروتو', opts:['بليتش','ناروتو','فيري تيل','ون بيس'], sound:'naruto'},
+      {q:'🎵 خمّن الأنمي من النغمة!', hint:'صياد العفاريت، يابورو + تانجيرو', ans:'Demon Slayer', opts:['Demon Slayer','Jujutsu Kaisen','Bleach','Attack on Titan'], sound:'ds'},
+      {q:'🎵 أي أنمي يعزف هذا؟', hint:'عمالقة تأكل البشر، جدار ماريا', ans:'Attack on Titan', opts:['ون بيس','ناروتو','Attack on Titan','Death Note'], sound:'aot'},
+      {q:'🎵 من أي أنمي؟', hint:'بطل سوبر ساياجين أصفر الشعر', ans:'Dragon Ball Z', opts:['Dragon Ball Z','Naruto','One Piece','Bleach'], sound:'dbz'},
+      {q:'🎵 خمّن الأنمي!', hint:'طلاب أبطال خارقون، مدرسة UA', ans:'My Hero Academia', opts:['My Hero Academia','Fairy Tail','Sword Art Online','One Punch Man'], sound:'mha'},
+    ]
+  }
+];
+
+// ═══════════════════════════════
+//  AUDIO ENGINE (Web Audio API)
+// ═══════════════════════════════
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+// Each anime gets a unique tone pattern
+const SOUNDS = {
+  naruto: [
+    {f:440,t:.15,v:.4},{f:550,t:.15,v:.4},{f:660,t:.2,v:.5},
+    {f:550,t:.1,v:.3},{f:440,t:.1,v:.3},{f:330,t:.3,v:.4}
+  ],
+  onepiece: [
+    {f:523,t:.2,v:.4},{f:659,t:.2,v:.4},{f:784,t:.25,v:.5},
+    {f:659,t:.15,v:.3},{f:523,t:.3,v:.4}
+  ],
+  ds: [
+    {f:392,t:.1,v:.3},{f:494,t:.1,v:.3},{f:587,t:.15,v:.4},
+    {f:698,t:.2,v:.5},{f:587,t:.15,v:.4},{f:494,t:.25,v:.35}
+  ],
+  mha: [
+    {f:262,t:.15,v:.4},{f:330,t:.15,v:.4},{f:392,t:.2,v:.5},
+    {f:494,t:.2,v:.5},{f:392,t:.1,v:.3},{f:330,t:.3,v:.4}
+  ],
+  dbz: [
+    {f:196,t:.2,v:.5},{f:247,t:.2,v:.5},{f:294,t:.25,v:.6},
+    {f:370,t:.3,v:.6},{f:294,t:.2,v:.4}
+  ],
+  aot: [
+    {f:311,t:.15,v:.5},{f:370,t:.15,v:.5},{f:466,t:.2,v:.6},
+    {f:554,t:.25,v:.6},{f:466,t:.15,v:.4},{f:370,t:.3,v:.45}
+  ]
+};
+
+function playSound(key, cb) {
+  try {
+    const ctx = getAudioCtx();
+    const notes = SOUNDS[key] || SOUNDS.naruto;
+    let t = ctx.currentTime + 0.05;
+    notes.forEach(n => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(n.f, t);
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(n.v, t + 0.02);
+      gain.gain.linearRampToValueAtTime(0, t + n.t - 0.02);
+      osc.start(t); osc.stop(t + n.t);
+      t += n.t;
+    });
+    if (cb) setTimeout(cb, (t - ctx.currentTime) * 1000 + 100);
+  } catch(e) { if(cb) cb(); }
+}
+
+// ═══════════════════════════════
+//  STATE
+// ═══════════════════════════════
+let P = {name:'', link:''};
+let S = {stageIdx:0, qIdx:0, score:0, answered:false, tmr:null, tLeft:0, stageDone:[]};
+
+// ═══════════════════════════════
+//  REGISTER
+// ═══════════════════════════════
+function register() {
+  const n = document.getElementById('rName').value.trim();
+  const l = document.getElementById('rLink').value.trim();
+  if (!n) { flash('rName'); return; }
+  P.name = n;
+  P.link = l.startsWith('http') ? l : (l ? 'https://' + l : '#');
+  document.getElementById('regScreen').style.display = 'none';
+  document.getElementById('mainApp').classList.add('on');
+  document.getElementById('tAvatar').textContent = n[0].toUpperCase();
+  document.getElementById('tName').textContent   = n;
+  document.getElementById('tLink').textContent   = l || 'karboai';
+  renderStageMap();
+  loadStage(0);
+}
+
+function flash(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = '#ff1744';
+  setTimeout(() => el.style.borderColor = '', 700);
+}
+
+// ═══════════════════════════════
+//  STAGE MAP
+// ═══════════════════════════════
+function renderStageMap() {
+  const map = document.getElementById('stageMap');
+  map.innerHTML = STAGES.map((st, i) => {
+    const done   = S.stageDone.includes(i);
+    const locked = i > 0 && !S.stageDone.includes(i - 1);
+    const active = S.stageIdx === i;
+    const stars  = done ? '⭐'.repeat(3) : '';
+    const cls    = `stg-btn ${active?'active':''} ${done?'done':''} ${locked?'locked':''}`;
+    return `<button class="${cls}" onclick="tryStage(${i})">
+      <span class="stg-icon">${st.icon}</span>
+      <div class="stg-name">${st.name}</div>
+      <div class="stg-stars">${stars}</div>
+    </button>`;
+  }).join('');
+}
+
+function tryStage(i) {
+  if (i > 0 && !S.stageDone.includes(i - 1)) return;
+  S.stageIdx = i; S.qIdx = 0; S.answered = false;
+  clearInterval(S.tmr);
+  renderStageMap();
+  loadQuestion();
+}
+
+function loadStage(i) {
+  S.stageIdx = i; S.qIdx = 0; S.answered = false;
+  loadQuestion();
+}
+
+// ═══════════════════════════════
+//  LOAD QUESTION
+// ═══════════════════════════════
+function loadQuestion() {
+  const g = STAGES[S.stageIdx];
+  const q = g.qs[S.qIdx];
+  S.answered = false;
+
+  const pct = (S.qIdx / g.qs.length) * 100;
+  const progFill = `<div class="q-prog-fill" style="width:${pct}%"></div>`;
+
+  // Audio button
+  const audBtn = `<button class="aud-btn" id="audBtn" onclick="triggerSound('${q.sound}',this)">
+    <span id="audIcon">▶</span> <span>استمع للمقطع</span>
+  </button>`;
+
+  // Options or text
+  let inputHTML = '';
+  if (g.type === 'choice') {
+    inputHTML = `<div class="opts" id="optsWrap">
+      ${q.opts.map(o => `<button class="opt" onclick="chooseAns(this,'${esc(o)}','${esc(q.ans)}')">${o}</button>`).join('')}
+    </div>`;
+  } else {
+    inputHTML = `<div class="txt-ans">
+      <input class="txt-inp" id="txtAns" placeholder="اكتب جوابك..." autocomplete="off"
+        onkeydown="if(event.key==='Enter')submitText()">
+      <button class="send-btn" onclick="submitText()">إرسال ⚡</button>
+    </div>`;
+  }
+
+  document.getElementById('gameCard').innerHTML = `
+    <div class="q-progress">
+      <div class="q-prog-top">
+        <span>${g.icon} ${g.name}</span>
+        <span>سؤال ${S.qIdx+1} / ${g.qs.length}</span>
+      </div>
+      <div class="q-prog-bar">${progFill}</div>
+    </div>
+    <div class="gc-head">
+      <div class="gc-icon">${g.icon}</div>
+      <div>
+        <div class="gc-title">${g.name}</div>
+        <div class="gc-desc">${g.desc}</div>
+      </div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-ring">
+        <svg width="68" height="68" viewBox="0 0 68 68">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="6"/>
+          <circle id="tCircle" cx="34" cy="34" r="28" fill="none" stroke="${g.color}" stroke-width="6"
+            stroke-dasharray="176" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <div class="timer-num" id="tNum">${g.timer}</div>
+      </div>
+    </div>
+    <div class="audio-bars paused" id="aBars">
+      ${[...Array(9)].map(()=>`<div class="ab" style="height:${6+Math.random()*16}px"></div>`).join('')}
+    </div>
+    ${audBtn}
+    <div class="qbox">
+      <div class="qbox-txt">${q.q}</div>
+      ${q.hint ? `<div class="qbox-hint">💡 ${q.hint}</div>` : ''}
+    </div>
+    ${inputHTML}
+    <div class="fb" id="fb"></div>
+    <button class="btn-next" id="btnNext" onclick="nextQ()">
+      ${S.qIdx < g.qs.length-1 ? 'السؤال التالي ←' : 'إنهاء المرحلة 🏁'}
+    </button>
+  `;
+
+  startTimer(g.timer, g.color);
+  // Auto-play sound after a brief delay
+  setTimeout(() => {
+    const btn = document.getElementById('audBtn');
+    if (btn) triggerSound(q.sound, btn);
+  }, 600);
+}
+
+// ═══════════════════════════════
+//  SOUND TRIGGER
+// ═══════════════════════════════
+function triggerSound(key, btn) {
+  const bars = document.getElementById('aBars');
+  if (bars) bars.classList.remove('paused');
+  const icon = document.getElementById('audIcon');
+  if (icon) icon.textContent = '⏸';
+  if (btn) btn.style.pointerEvents = 'none';
+
+  playSound(key, () => {
+    const b2 = document.getElementById('aBars');
+    if (b2) b2.classList.add('paused');
+    const i2 = document.getElementById('audIcon');
+    if (i2) i2.textContent = '▶';
+    if (btn) btn.style.pointerEvents = '';
+  });
+}
+
+// ═══════════════════════════════
+//  TIMER
+// ═══════════════════════════════
+function startTimer(secs, color) {
+  clearInterval(S.tmr);
+  S.tLeft = secs;
+  const total = 176;
+
+  S.tmr = setInterval(() => {
+    if (S.answered) { clearInterval(S.tmr); return; }
+    S.tLeft--;
+    const tNum = document.getElementById('tNum');
+    const tCirc = document.getElementById('tCircle');
+    if (!tNum) { clearInterval(S.tmr); return; }
+    tNum.textContent = S.tLeft;
+    tCirc.style.strokeDashoffset = total * (1 - S.tLeft / secs);
+    if (S.tLeft <= 5) tCirc.style.stroke = '#ff1744';
+    if (S.tLeft <= 0) {
+      clearInterval(S.tmr);
+      if (!S.answered) {
+        S.answered = true;
+        const g = STAGES[S.stageIdx];
+        const q = g.qs[S.qIdx];
+        showFB(false, `⏰ انتهى الوقت! الجواب: ${q.ans}`);
+        document.querySelectorAll('.opt').forEach(b => {
+          b.disabled = true;
+          if (b.textContent === q.ans) b.classList.add('ok');
+        });
+        document.getElementById('btnNext').classList.add('on');
+      }
+    }
+  }, 1000);
+}
+
+// ═══════════════════════════════
+//  ANSWERS
+// ═══════════════════════════════
+function chooseAns(btn, sel, cor) {
+  if (S.answered) return;
+  S.answered = true;
+  clearInterval(S.tmr);
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === cor) b.classList.add('ok');
+    else b.classList.add('bad');
+  });
+  const pts = sel === cor ? Math.max(10, S.tLeft * 6) : 0;
+  if (pts > 0) { addScore(pts); showFB(true, `✅ صح! +${pts} نقطة 🔥`); confetti(); }
+  else showFB(false, `❌ خطأ! الجواب: ${cor}`);
+  document.getElementById('btnNext').classList.add('on');
+}
+
+function submitText() {
+  if (S.answered) return;
+  const inp = document.getElementById('txtAns');
+  const val = inp.value.trim().toLowerCase().replace(/\s+/g,'');
+  if (!val) return;
+  S.answered = true;
+  clearInterval(S.tmr);
+  inp.disabled = true;
+  const q = STAGES[S.stageIdx].qs[S.qIdx];
+  const cor = q.ans.toLowerCase().replace(/\s+/g,'');
+  const alts = (q.alts||[]).map(a=>a.toLowerCase().replace(/\s+/g,''));
+  const ok = val===cor || alts.includes(val) || cor.includes(val) || val.includes(cor);
+  const pts = ok ? Math.max(10, S.tLeft * 6) : 0;
+  if (pts > 0) { addScore(pts); showFB(true, `✅ صح! +${pts} نقطة 🔥`); confetti(); }
+  else showFB(false, `❌ خطأ! الجواب: ${q.ans}`);
+  document.getElementById('btnNext').classList.add('on');
+}
+
+function addScore(pts) {
+  S.score += pts;
+  const el = document.getElementById('tScore');
+  el.textContent = S.score;
+  el.style.transform = 'scale(1.35)';
+  setTimeout(() => el.style.transform = '', 280);
+}
+
+// ═══════════════════════════════
+//  NEXT QUESTION / STAGE END
+// ═══════════════════════════════
+function nextQ() {
+  clearInterval(S.tmr);
+  const g = STAGES[S.stageIdx];
+  if (S.qIdx < g.qs.length - 1) {
+    S.qIdx++;
+    loadQuestion();
+  } else {
+    stageComplete();
+  }
+}
+
+function stageComplete() {
+  const g = STAGES[S.stageIdx];
+  if (!S.stageDone.includes(S.stageIdx)) S.stageDone.push(S.stageIdx);
+  renderStageMap();
+  saveScore();
+
+  const hasNext = S.stageIdx < STAGES.length - 1;
+  document.getElementById('gameCard').innerHTML = `
+    <div class="stg-done">
+      <span class="big-e">🎉</span>
+      <h2>أنهيت مرحلة ${g.name}!</h2>
+      <p style="color:var(--muted);margin-bottom:6px">نقاطك في هذه الجلسة</p>
+      <div class="pts">${S.score}</div>
+      <div class="stg-done-btns">
+        ${hasNext ? `<button class="btn-purple" onclick="tryStage(${S.stageIdx+1})">المرحلة التالية ${STAGES[S.stageIdx+1].icon}</button>` : ''}
+        <a class="btn-gold" href="results.html" target="_blank">🏆 لوحة المتصدرين</a>
+        <button class="btn-purple" onclick="tryStage(${S.stageIdx})">🔄 أعد المرحلة</button>
+      </div>
+    </div>
+  `;
+  confetti(); confetti();
+}
+
+// ═══════════════════════════════
+//  SAVE TO LEADERBOARD
+// ═══════════════════════════════
+function saveScore() {
+  const lb = JSON.parse(localStorage.getItem('lb_v3') || '[]');
+  const g  = STAGES[S.stageIdx];
+  lb.push({ name:P.name, link:P.link, score:S.score, stage:g.name, stageIcon:g.icon, ts:Date.now() });
+  lb.sort((a,b) => b.score - a.score);
+  localStorage.setItem('lb_v3', JSON.stringify(lb.slice(0, 60)));
+}
+
+// ═══════════════════════════════
+//  HELPERS
+// ═══════════════════════════════
+function showFB(ok, msg) {
+  const el = document.getElementById('fb');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'fb on ' + (ok ? 'ok' : 'bad');
+}
+
+function confetti() {
+  const cols = ['#e040fb','#00e5ff','#ffd600','#00e676','#ff4081'];
+  for (let i=0; i<16; i++) {
+    const c = document.createElement('div');
+    c.className = 'conf';
+    c.style.cssText = `left:${Math.random()*100}vw;top:-8px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-delay:${Math.random()*.4}s;animation-duration:${1.1+Math.random()*.7}s`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2000);
+  }
+}
+
+function esc(s) { return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+// ENTER key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const rn = document.getElementById('rName');
+    if (rn && document.getElementById('regScreen').style.display !== 'none') { register(); return; }
+  }
+});
+</script>
+</body>
+</html>
